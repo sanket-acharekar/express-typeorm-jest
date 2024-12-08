@@ -24,6 +24,3 @@ export default AppDataSource;
 //     .catch((err) => {
 //         console.error('Error during Data Source initialization:', err);
 //     });
-//Sample comment
-
-    //docker run --name my_postgres -e POSTGRES_USER=satnam -e POSTGRES_PASSWORD=password -e POSTGRES_DB=satnam_db -p 5432:5432  -d postgres
