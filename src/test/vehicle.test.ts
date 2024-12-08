@@ -51,7 +51,7 @@ describe('Vehicle Entity Tests', () => {
       capacity_kg: 2500,
       year_manufactured: 2020,
       num_repairs: 1,
-      type: VehicleType.cargo
+      type: VehicleType.inCity
     });
 
     await vehicleRepository.save(newVehicle);
@@ -75,7 +75,7 @@ describe('Vehicle Entity Tests', () => {
       capacity_kg: 3000,
       year_manufactured: 2019,
       num_repairs: 3,
-      type: VehicleType.inCity
+      type: VehicleType.longHaul
     });
 
     await vehicleRepository.save(newVehicle);

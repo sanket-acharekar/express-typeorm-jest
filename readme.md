@@ -19,8 +19,8 @@ This project is a Node.js Express application integrated with TypeORM for databa
 ## Installation
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd <repository-folder>
+git clone https://github.com/sanket-acharekar/express-typeorm-jest.git
+cd express-typeorm-jest
 ```
 2. Install dependencies:
 ```bash
@@ -54,14 +54,6 @@ npm run dev
 ```
 This uses ts-node-dev to watch for changes and automatically restart the server.
 
-### Build for Production
-To compile the TypeScript code to JavaScript for production:
-
-```bash
-npm run build
-```
-The compiled files will be located in the dist/ directory.
-
 ### Start in Production
 ```bash
 npm start
@@ -73,12 +65,6 @@ To run migrations and apply them to the database:
 
 ```bash
 npm run migration:up
-```
-
-### Reverting Migrations
-To revert the last applied migration:
-```bash
-npm run migration:down
 ```
 
 ### Creating a New Migration
@@ -96,11 +82,8 @@ npm test
 ```
 ## Scripts
 - npm run dev: Start the application in development mode.
-- npm run build: Compile TypeScript to JavaScript.
-- npm start: Start the application in production mode.
 - npm test: Run the test suite.
 - npm run migration:up: Run all pending migrations.
-- npm run migration:down: Revert the last migration.
 
 ## Folder Structure
 - `src/entity/`: Contains the database entity models.
