@@ -22,17 +22,51 @@ export async function getTrips (req: Request, res: Response): Promise<void> {
   
         const trip = await tripRepository.findOne({
           where: { trip_id: id },
-          relations: ['tripVehicles', 'tripDrivers', 'tripShipments'], // Include related entities
+          select: {
+            tripVehicles: {
+              vehicle_id: true,
+            },
+            tripDrivers: {
+              driver_id: true,
+            },
+            tripShipments: {
+              id: true,
+              shipment_id: true,
+              trip_id: true
+            }
+          },
+          relations: {
+            tripVehicles: true,
+            tripDrivers: true,
+            tripShipments: true,
+          },
+          // relations: ['tripVehicles', 'tripDrivers', 'tripShipments'], // Include related entities
         });
         if (!trip) {
           res.status(404).json({ message: 'Trip not found' });
           return;
         }
-  
+        
         res.json(trip);
       } else {
         const trips = await tripRepository.find({
-          relations: ['tripVehicles', 'tripDrivers', 'tripShipments'],
+          select: {
+            tripVehicles: {
+              vehicle_id: true,
+            },
+            tripDrivers: {
+              driver_id: true,
+            },
+            tripShipments: {
+              shipment_id: true,
+              trip_id: true,
+            }
+          },
+          relations: {
+            tripVehicles: true,
+            tripDrivers: true,
+            tripShipments: true,
+          }
         });
         res.json(trips);
       }
@@ -103,8 +137,9 @@ export async function createTrip(req: Request, res: Response): Promise<void> {
 // Update a Trip
 export async function updateTrip(req: Request, res: Response): Promise<void> {
     const tripRepository = AppDataSource.getRepository(Trip);
+    const tripShipmentRepository = AppDataSource.getRepository(TripShipment);
     const { trip_id } = req.params;
-    const { from_location, to_location, vehicle, driver, tripShipments } = req.body;
+    const { from_location, to_location, vehicle, driver, tripShipmentIds } = req.body;
   
     try {
       const id = parseInt(trip_id, 10);
@@ -121,7 +156,22 @@ export async function updateTrip(req: Request, res: Response): Promise<void> {
   
       trip.from_location = from_location;
       trip.to_location = to_location;
-      trip.tripShipments = tripShipments;
+      if(!!tripShipmentIds && Array.isArray(tripShipmentIds)) {
+
+        const trips = await tripShipmentRepository.findBy({ trip_id: trip.trip_id });
+        if (!!trips) {
+          await tripShipmentRepository.remove(trips);
+        }
+
+        for (let tripShipmentId of tripShipmentIds) {
+
+          const newTripShipment = tripShipmentRepository.create({
+            trip_id: trip.trip_id,
+            shipment_id: parseInt(tripShipmentId),
+          });
+          await tripShipmentRepository.save(newTripShipment);
+        }
+      }
   
       await tripRepository.save(trip);
       res.json(trip);
